@@ -245,6 +245,9 @@
     .modal-box { padding: 18px; }
     .modal-grid { grid-template-columns: repeat(2, 1fr); }
     .add-holding-form { grid-template-columns: 1fr; }
+    .segmented { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .segmented button { flex-shrink: 0; }
+    .controls { gap: 8px; }
   }
 
   /* ---------- Initial live-data loading overlay ---------- */
@@ -1439,9 +1442,14 @@ try {
     const goodRgb = hexToRgb(resolveColor('--good'));
     const critRgb = hexToRgb(resolveColor('--critical'));
     const neutralRgb = hexToRgb(resolveColor('--chip-bg-strong'));
-    const items = [...RAW].sort((a,b) => (b.mcap||0)-(a.mcap||0)).slice(0, 30)
+    // Fewer, bigger tiles on narrow screens — a 30-tile treemap on a phone width
+    // makes most tiles too small to hold a label at all.
+    const isNarrow = window.innerWidth < 640;
+    const tileCount = isNarrow ? 14 : 30;
+    const items = [...RAW].sort((a,b) => (b.mcap||0)-(a.mcap||0)).slice(0, tileCount)
       .map(d => ({ id: d.id, value: Math.max(d.mcap||1, 1) }));
-    const W = 560, H = 380;
+    const W = 560, H = isNarrow ? 480 : 380;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const rects = squarify(items, 0, 0, W, H);
     let s = '';
     rects.forEach(r => {
@@ -1449,8 +1457,8 @@ try {
       const color = heatColor(d.ch24, goodRgb, critRgb, neutralRgb);
       s += `<rect class="heatmap-tile" data-id="${esc(r.id)}" x="${r.x.toFixed(1)}" y="${r.y.toFixed(1)}" width="${r.w.toFixed(1)}" height="${r.h.toFixed(1)}" fill="${color}"/>`;
       const minSide = Math.min(r.w, r.h);
-      if (minSide > 26) {
-        const fontSize = Math.min(15, Math.max(9, minSide*0.22));
+      if (minSide > 22) {
+        const fontSize = Math.min(16, Math.max(10, minSide*0.22));
         const cx = r.x + r.w/2, cy = r.y + r.h/2;
         s += `<text class="heatmap-label" x="${cx.toFixed(1)}" y="${(cy-fontSize*0.15).toFixed(1)}" text-anchor="middle" font-size="${fontSize.toFixed(1)}">${esc(d.sym)}</text>`;
         if (r.h > 34) {
