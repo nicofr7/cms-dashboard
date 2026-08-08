@@ -154,9 +154,11 @@
     border-bottom: 1px solid var(--border);
   }
   .topbar-inner {
-    max-width: 1220px; margin: 0 auto; padding: 12px 20px;
-    display: flex; align-items: center; gap: 18px;
+    max-width: 1220px; margin: 0 auto; padding: 10px 20px 8px;
+    display: flex; flex-direction: column; gap: 8px;
   }
+  .topbar-row-top { display: flex; align-items: center; gap: 14px; }
+  .topbar-row-tabs { display: flex; }
   .brand { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 15.5px; letter-spacing: -0.005em; flex-shrink: 0; }
   .brand .mark {
     width: 30px; height: 30px; border-radius: 9px;
@@ -245,13 +247,14 @@
   @media (max-width: 900px) {
     .charts-row, .charts-row-2 { grid-template-columns: 1fr; }
     .stat-row { grid-template-columns: repeat(2,1fr); }
-    .topbar-inner { flex-wrap: wrap; }
   }
+  .topbar-row-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .topbar-row-tabs .tabnav { flex-shrink: 0; }
   @media (max-width: 640px) {
     .stat-row { grid-template-columns: 1fr; }
     .hero h1 { font-size: 21px; }
     .hero .sub { font-size: 12.5px; }
-    .tabnav { flex-wrap: wrap; justify-content: center; }
+    .tabnav { flex-shrink: 0; }
     .tabnav button { padding: 6px 9px; font-size: 11.5px; }
     .tabnav button svg { width: 12px; height: 12px; }
     .brand span:not(.mark) { display: none; }
@@ -532,6 +535,7 @@
 
   <div class="topbar">
     <div class="topbar-inner">
+     <div class="topbar-row-top">
       <div class="brand">
         <span class="mark">
           <svg viewBox="0 0 24 24" fill="none">
@@ -544,13 +548,6 @@
           </svg>
         </span>
         <span class="brand-name"><b>C</b>M<b>S</b></span>
-      </div>
-      <div class="tabnav" id="tabnav">
-        <button data-view="overview" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</button>
-        <button data-view="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19 V10 M11 19 V5 M18 19 V13"/></svg>Crypto Charts</button>
-        <button data-view="stocks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 20V10l4-3 4 3v10M13 20V6l4-2 4 2v14"/></svg>Stocks</button>
-        <button data-view="watchlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>Watchlist</button>
-        <button data-view="portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 10 H21 M16 14 h.01"/><path d="M7 7 V5.5 A2.5 2.5 0 0 1 9.5 3 h5 A2.5 2.5 0 0 1 17 5.5 V7"/></svg>Portfolio</button>
       </div>
       <div class="spacer"></div>
       <div class="auth-area">
@@ -584,6 +581,16 @@
           <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         </span>
       </button>
+     </div>
+     <div class="topbar-row-tabs">
+      <div class="tabnav" id="tabnav">
+        <button data-view="overview" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</button>
+        <button data-view="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19 V10 M11 19 V5 M18 19 V13"/></svg>Crypto Charts</button>
+        <button data-view="stocks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 20V10l4-3 4 3v10M13 20V6l4-2 4 2v14"/></svg>Stocks</button>
+        <button data-view="watchlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>Watchlist</button>
+        <button data-view="portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 10 H21 M16 14 h.01"/><path d="M7 7 V5.5 A2.5 2.5 0 0 1 9.5 3 h5 A2.5 2.5 0 0 1 17 5.5 V7"/></svg>Portfolio</button>
+      </div>
+     </div>
     </div>
   </div>
 
