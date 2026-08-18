@@ -213,6 +213,11 @@
   }
   .hero h1 { font-size: 25px; margin: 0 0 6px; letter-spacing: -0.015em; position: relative; }
   .hero .sub { color: var(--text-secondary); font-size: 13.5px; max-width: 780px; line-height: 1.55; position: relative; }
+  .hero-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; position: relative; }
+  .hero-actions .snapshot-badge { margin-top: 0; }
+  .how-it-works-btn { min-height: 40px; border: 1px solid var(--border); border-radius: 100px; padding: 6px 13px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 11.5px; font-weight: 650; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+  .how-it-works-btn:hover, .how-it-works-btn:focus-visible { background: var(--chip-bg); border-color: var(--border-strong); color: var(--text-primary); outline: none; }
+  .how-it-works-btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-glow); }
   .snapshot-badge {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 11.5px; color: var(--text-muted); margin-top: 10px; position: relative;
@@ -258,12 +263,14 @@
     .stat-row { grid-template-columns: 1fr; }
     .hero h1 { font-size: 21px; }
     .hero .sub { font-size: 12.5px; }
+    .hero-actions { align-items: flex-start; flex-wrap: wrap; }
     .tabnav { flex-shrink: 0; }
     .tabnav button { padding: 6px 9px; font-size: 11.5px; }
     .tabnav button svg { width: 12px; height: 12px; }
     .brand span:not(.mark) { display: none; }
     .auth-popover { width: min(280px, calc(100vw - 32px)); right: -8px; }
     .modal-box { padding: 18px; }
+    .guide-grid { grid-template-columns: 1fr; }
     .modal-grid { grid-template-columns: repeat(2, 1fr); }
     .add-holding-form { grid-template-columns: 1fr; }
     .segmented { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -516,6 +523,15 @@
     margin-left: auto; background: var(--chip-bg); border: none; border-radius: 9px;
     width: 30px; height: 30px; cursor: pointer; font-size: 15px; color: var(--text-secondary);
   }
+  .guide-modal-box { max-width: 620px; }
+  .guide-modal-title { font-size: 21px; margin: 0; letter-spacing: -0.02em; }
+  .guide-modal-lede { color: var(--text-secondary); line-height: 1.55; margin: 8px 0 18px; font-size: 13.5px; }
+  .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .guide-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .guide-card .guide-kicker { color: var(--text-muted); font-size: 10.5px; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; }
+  .guide-card h4 { margin: 7px 0 5px; font-size: 13px; }
+  .guide-card p { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+  .guide-footer { margin: 16px 0 0; color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }
   .modal-price-row { display: flex; align-items: baseline; gap: 10px; margin: 12px 0 16px; flex-wrap: wrap; }
   .modal-price-row .price { font-size: 27px; font-weight: 700; letter-spacing: -0.01em; }
   .modal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
@@ -601,15 +617,11 @@
   <div class="wrap">
     <div class="hero">
       <h1>CMS — Crypto, Memecoins &amp; Stocks</h1>
-      <div class="sub">
-        One dashboard, three asset classes: top coins by market cap, dedicated memecoins, and a curated
-        set of public stocks — real market data throughout. Momentum is one signal among several (alongside
-        gainers, losers, volume, and risk) — not the headline. <b>Risk Score</b> is a transparent heuristic, not
-        an on-chain audit. <b>Analytics</b> shows real technical indicators (candlesticks, moving averages, RSI,
-        volatility bands) computed from actual price history — they describe the past, they don't predict the
-        future. Nothing here is financial advice.
+      <div class="sub">Live crypto, memecoin, and stock data — with transparent scores, real technical indicators, and a synced portfolio. Built to show what the data says, not to promise what happens next.</div>
+      <div class="hero-actions">
+        <div class="snapshot-badge"><span class="dot"></span><span id="snapshot-time">Loading live market data…</span></div>
+        <button class="how-it-works-btn" id="how-it-works-btn" type="button" aria-haspopup="dialog">How CMS works</button>
       </div>
-      <div class="snapshot-badge"><span class="dot"></span><span id="snapshot-time">Snapshot loading…</span></div>
     </div>
 
     <!-- ======================= OVERVIEW ======================= -->
@@ -945,6 +957,18 @@
 
     <div class="tooltip" id="tooltip"></div>
     <div class="modal-overlay" id="modal-overlay"><div class="modal-box" id="modal-box"></div></div>
+    <div class="modal-overlay" id="guide-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+      <section class="modal-box guide-modal-box">
+        <div class="modal-head"><h2 class="guide-modal-title" id="guide-modal-title">How CMS works</h2><button class="modal-close" id="guide-modal-close" type="button" aria-label="Close guide">✕</button></div>
+        <p class="guide-modal-lede">CMS brings crypto, memecoins, and stocks into one screen. The point is clarity: live status is visible, every score is explainable, and risk labels never pretend to be guarantees.</p>
+        <div class="guide-grid">
+          <article class="guide-card"><div class="guide-kicker">1 · Live status</div><h4>Know what you’re viewing</h4><p>The line under the heading says whether crypto and stocks loaded live or fell back to the last known snapshot.</p></article>
+          <article class="guide-card"><div class="guide-kicker">2 · Use more than price</div><h4>Compare the signals</h4><p>Gainers, losers, volume, momentum, technical charts, and market cap give different views of the same market.</p></article>
+          <article class="guide-card"><div class="guide-kicker">3 · Treat risk honestly</div><h4>Scores are not promises</h4><p>Momentum describes recent behavior. Risk is a market-data heuristic, not an audit or a prediction.</p></article>
+        </div>
+        <p class="guide-footer">Your Watchlist and Portfolio sync when you sign in. CMS is a research tool, not financial advice.</p>
+      </section>
+    </div>
   </div>
 </div>
 
@@ -1659,6 +1683,26 @@ try {
   function closeDetail() { overlay.classList.remove('open'); hideTooltip(); }
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDetail(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
+
+  // ================================================================
+  // FIRST-VISIT GUIDE
+  // ================================================================
+  const guideOverlay = document.getElementById('guide-modal-overlay');
+  const guideButton = document.getElementById('how-it-works-btn');
+  const guideClose = document.getElementById('guide-modal-close');
+  function closeGuide() {
+    guideOverlay.classList.remove('open');
+    guideButton.focus();
+  }
+  guideButton.addEventListener('click', () => {
+    guideOverlay.classList.add('open');
+    guideClose.focus();
+  });
+  guideClose.addEventListener('click', closeGuide);
+  guideOverlay.addEventListener('click', (e) => { if (e.target === guideOverlay) closeGuide(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && guideOverlay.classList.contains('open')) closeGuide();
+  });
 
   // ================================================================
   // ANALYTICS — candlestick chart (TradingView-style OHLC)
